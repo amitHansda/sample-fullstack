@@ -1,0 +1,26 @@
+version: '3.3'
+
+services: 
+    customer-dashboard:
+        image: 'amithansda/sampleapp-dashboard'
+        build:
+            context: ./CustomerDemo.Web.Dashboard
+        ports: 
+            - 8075:80
+    customer-api:
+        image: 'amithansda/sampleapp-webapi'
+        build:
+            context: ./CustomerDemo.Web
+        ports: 
+            - 8074:80
+        environment: 
+            ConnectionStrings__ApplicationData: 'Host=customer-api-data;Database=SampleApplication;Username=postgres;Password=Password1234'
+        restart: always
+    customer-api-data:
+        image: 'postgres:12.4'
+        environment: 
+            - POSTGRES_PASSWORD=Password1234
+        volumes: 
+            - data-volume-customerdata:/var/lib/postgresql/data
+volumes: 
+    data-volume-customerdata:
